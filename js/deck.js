@@ -4,7 +4,7 @@ function Deck() {
   var self = this;
   this.cards = new Array();
   this.createDeck = function createDeck() {
-    var ranks = new Array("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A");
+    var ranks = new Array("2", "3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k", "a");
     var value = new Array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13);
     var suits = new Array("c", "d", "h", "s");
     var num_ranks = ranks.length;

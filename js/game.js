@@ -61,14 +61,18 @@ function printTable() {
     appendToGame(string);
 }
 
-function printPlayers() {
+function printPlayers(gameOver) {
     var i;
     var string;
 
     string = ("<div id=\"players\">");
 
     for (i = 0; i < this.players.length; i++) {
-        string += this.players[i].printPlayer();
+        if (i === 0) {
+            string += this.players[i].printPlayer(1);
+        } else {
+            string += this.players[i].printPlayer(gameOver);
+        }
     }
 
     string += ("</div><br /><br /><br />");
@@ -85,10 +89,10 @@ function setUpGame() {
     game.addPlayer(new Player(50000, "Player 1;", "player1.jpg"));
     game.addPlayer(new Player(500, "Player 2", "player2.jpg"));
     game.deal(2);
-    game.printPlayers();
-    game.printTable();
+    
     game.cardCount = 0;
-    appendToGame("<input value=\"next\" type=\"button\" onclick=\"updateGame(" + (3) + ")\" /> <br />");
+    printGame(2, 0);
+
 }
 
 function appendToGame(text) {
@@ -96,29 +100,38 @@ function appendToGame(text) {
 }
 
 function updateGame(cards) {
-    document.getElementById("game").innerHTML  = "";
-    
     
     if ( ( game.cardCount + 1 )% 6 === 0)
     {
-        determineStrongestHand(game.players[0].cards, game.tableCards);
-
-        // for (var i = 0; i < game.players.length; i++) {
-        //     determineStrongestHand(game.players[i].cards, game.tableCards);
-        // }
-        game.printPlayers();
-        game.printTable();
-
-        //document.getElementById("game").innerHTML  = "";
-        
-        appendToGame("<input value=\"New Game\" type=\"button\" onclick=\"setUpGame()\" /> <br />");
-
+        var topHand = 0;
+        var winner = 0;
+        for (var i = 0; i < game.players.length; i++) {
+            game.players[i].handValue = determineStrongestHand(game.players[i].cards, game.tableCards);
+            if (topHand < game.players[i].handValue) {
+                topHand = game.players[i].handValue;
+                winner = i;
+            }
+            console.log("player " + i + " score: " + game.players[i].handValue)
+        }
+        alert("The winner is player: " + winner);
+        printGame(game.cardCount, 1)
         return;
     }
-    game.printPlayers();
     game.turnCard(cards);
+    printGame(game.cardCount, 0);
+}
+
+
+function printGame(cardCount, gameOver) {
+    document.getElementById("game").innerHTML  = "";
+    game.printPlayers(gameOver);
     game.printTable();
 
-    appendToGame("<input value=\"next\" type=\"button\" onclick=\"updateGame(" + (game.cardCount + 1) + ")\" /> <br />");
+    if (!gameOver) {
+        appendToGame("<input value=\"next\" type=\"button\" onclick=\"updateGame(" + (cardCount + 1) + ")\" /> <br />");
+    } else {
+        appendToGame("<input value=\"New Game\" type=\"button\" onclick=\"setUpGame()\" /> <br />");
+    }
+
 
 }

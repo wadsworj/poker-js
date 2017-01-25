@@ -5,9 +5,19 @@ function determineStrongestHand(playerCards, tableCards) {
 
   var i, j, k, l;
   var count = 0;
+  var maxValue = 0, tempValue = 0;
 
   var hand = tableCards.concat(playerCards);
 
+  // sort hand in ascending order
+  hand.sort(function(a, b) {
+    return a.value - b.value;
+  });
+
+  // determine strength of table hand (only 5 cards on table)
+  testHand(tableCards);
+
+  // loop through all combinations of cards
   for (i = 0; i < 2; i++) {
     for (l = 0; l < 2; l++) {
       for (j = 0; j < 5; j++) {
@@ -27,24 +37,29 @@ function determineStrongestHand(playerCards, tableCards) {
         }
         count++;
         
-        testHand(tempHand);
+        tempValue = testHand(tempHand);
+        if (tempValue > maxValue) {
+          maxValue = tempValue;
+        }
 
       }
     }
   }
 
-  console.log("count: " + count);
-
-  
-
+  return maxValue;
 }
 
 function testHand(hand) {
-
-  isFlush(hand);
-  isPair(hand);
-  isStraight(hand);
-
+  var handValue;
+  if(handValue = isFlush(hand)) {
+    return handValue;
+  } else if (handValue = isStraight(hand)) {
+   return handValue;
+  } else if (handValue = isThreeOfAKind(hand)) {
+    return handValue;
+  } else if (handValue = isPair(hand)) {
+    return handValue;
+  }
 }
 
 function isFlush(hand) {
@@ -52,42 +67,51 @@ function isFlush(hand) {
   var suit = hand[0].suit;
   for (i = 1; i < hand.length; i++) {
     if (suit != hand[i].suit) {
-      return -1;
+      return 0;
     }
   }
   alert("Found flush!");
+  return 6 * hand[hand.length - 1].value;
 }
 
 
 function isStraight(hand) {
-  var value;
+  var value = hand[0].value;
 
-  hand.sort(function(a, b) {
-    return a.value - b.value;
-  });
-
-  var string = "";
-  for (var i = 0; i < hand.length; i++) {
-    string += hand[i].value;
-  }
-
-  console.log(string);
-
-
-  value = hand[0].value;
-
-  //alert("hand.length: " + hand.length);
-
-  for (i = 1; i < hand.length; i++) {
+  for (var i = 1; i < hand.length; i++) {
     //alert("value: " + value + " hand[i].value: " + hand[i].value);
     if ( (value + 1 === hand[i].value) || ( (value % 13 + 1) === hand[i].value) ) {
     } else {
-      return -1;
+      return 0;
     }
     value = hand[i].value;
   }
   alert("Found straight!");
-  
+  return 5 * hand[hand.length - 1].value;
+}
+
+
+function isThreeOfAKind(hand) {
+  var i, j;
+  var rank;
+  var count;
+  for (i = 0; i < hand.length - 2; i++) {
+    rank = hand[i].rank;
+    count = 1;
+    for (j = i + 1; j < hand.length; j++)
+    {
+      if (rank === hand[j].rank) {
+        count++;
+
+        if (count === 3) {
+          return 4 * hand[j].value;
+        }
+        
+      }
+    }
+    
+  }
+  return 0;
 }
 
 
@@ -97,14 +121,15 @@ function isPair(hand) {
   var rank;
 
   for (i = 0; i < hand.length - 1; i++) {
-    
     rank = hand[i].rank;
     for (j = i + 1; j < hand.length; j++)
     {
       if (rank === hand[j].rank) {
-        console.log("found pair!");
+        console.log("found pair! " + 2 * hand[j].value);
+        return 2 * hand[j].value;
+
       }
     }
   }
-  return -1;
+  return 0;
 }

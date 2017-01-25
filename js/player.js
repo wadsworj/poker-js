@@ -7,6 +7,7 @@ function Player(money, player_name, img_src) {
     this.player_name = player_name;
     this.img_src = img_src;
     this.cards = new Array();
+    this.handValue = 0;
 
     this.addCard = function(card) {
         self.cards.push(card);
@@ -27,7 +28,7 @@ function printImage() {
 }
 
 
-function printPlayer() {
+function printPlayer(hidden) {
     var i;
     var string;
 
@@ -40,7 +41,11 @@ function printPlayer() {
 
 
     for (i = 0; i < this.cards.length; i++) {
-        string += this.cards[i].toImage() + " ";
+        if (hidden === 1) {
+            string += this.cards[i].toImage() + " ";
+        } else {
+            string += this.cards[i].backToImage() + " ";
+        }
     }
     string += "<br />";
     string += "</div>";

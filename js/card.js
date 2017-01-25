@@ -9,10 +9,16 @@ function Card(suit, rank, value) {
 
     Card.prototype.toString = cardToString;
     this.toImage = cardToImage;
+    this.backToImage = backToImage;
+    
 }
 
 function cardToImage() {
     return "<img src=\"imgs/" + this.rank + this.suit + ".gif\" />";
+}
+
+function backToImage() {
+    return "<img src=\"imgs/b.gif\" />";
 }
 
 
