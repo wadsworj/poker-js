@@ -1,0 +1,22 @@
+.html {
+    background: red;
+}
+
+body {
+    background-color: lightblue;
+}
+
+div#players {
+  width: 800px ;
+  margin-left: auto ;
+  margin-right: auto ;
+}
+
+#player {
+    float: left;
+    padding-left: 50px; 
+}
+
+#table {
+    width: 800px ;
+}
